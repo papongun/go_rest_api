@@ -19,11 +19,11 @@ var (
 	userRepoInstance UserRepository
 )
 
-func GetUserRepository(db *gorm.DB) *UserRepository {
+func GetUserRepository(db *gorm.DB) UserRepository {
 	userRepoOnce.Do(func() {
 		userRepoInstance = &UserRepositoryImpl{Db: db}
 	})
-	return &userRepoInstance
+	return userRepoInstance
 }
 
 // Implement

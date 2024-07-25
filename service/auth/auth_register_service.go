@@ -22,11 +22,11 @@ var (
 	authRegServiceInstance AuthRegisterService
 )
 
-func GetAuthRegisterService(r repository.UserRepository) *AuthRegisterService {
+func GetAuthRegisterService(r repository.UserRepository) AuthRegisterService {
 	authRegServiceOnce.Do(func() {
 		authRegServiceInstance = &AuthRegisterServiceImpl{R: r}
 	})
-	return &authRegServiceInstance
+	return authRegServiceInstance
 }
 
 // Implement
