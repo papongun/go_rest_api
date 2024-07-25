@@ -10,9 +10,9 @@ import (
 )
 
 func InitAuthRoute(router fiber.Router, db *gorm.DB) {
-	userRepo := repository.NewUserRepository(db)
-	authRegService := auth_s.NewAuthRegisterService(userRepo)
-	authRegController := auth_c.NewUserRegisterContoller(authRegService)
+	userRepo := repository.GetUserRepository(db)
+	authRegService := auth_s.GetAuthRegisterService(*userRepo)
+	authRegController := auth_c.GetUserRegisterContoller(*authRegService)
 
 	authRoute := router.Group("/auth")
 	authRoute.Post("/login", authRegController.Register)

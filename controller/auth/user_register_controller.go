@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"sync"
+
 	"github.com/gofiber/fiber/v2"
 
 	generic "github.com/papongun/go_todo/dto"
@@ -9,12 +11,22 @@ import (
 	service "github.com/papongun/go_todo/service/auth"
 )
 
-type UserRegisterContoller struct {
-	s service.AuthRegisterService
+// Singleton
+var (
+	userRegControllerOnce     sync.Once
+	userRegControllerInstance UserRegisterContoller
+)
+
+func GetUserRegisterContoller(s service.AuthRegisterService) *UserRegisterContoller {
+	userRegControllerOnce.Do(func() {
+		userRegControllerInstance = UserRegisterContoller{s: s}
+	})
+	return &userRegControllerInstance
 }
 
-func NewUserRegisterContoller(s service.AuthRegisterService) *UserRegisterContoller {
-	return &UserRegisterContoller{s: s}
+// Implement
+type UserRegisterContoller struct {
+	s service.AuthRegisterService
 }
 
 func (c *UserRegisterContoller) Register(ctx *fiber.Ctx) error {

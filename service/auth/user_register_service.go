@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"sync"
+
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 
@@ -9,16 +11,27 @@ import (
 	"github.com/papongun/go_todo/repository"
 )
 
+// Interface
 type AuthRegisterService interface {
-	Register(user *dto.UserRegisterRequest) (*dto.UserRegisterResponse, error)
+	Register(request *dto.UserRegisterRequest) (*dto.UserRegisterResponse, error)
 }
 
+// Singleton
+var (
+	authRegServiceOnce     sync.Once
+	authRegServiceInstance AuthRegisterService
+)
+
+func GetAuthRegisterService(r repository.UserRepository) *AuthRegisterService {
+	authRegServiceOnce.Do(func() {
+		authRegServiceInstance = &AuthRegisterServiceImpl{r: r}
+	})
+	return &authRegServiceInstance
+}
+
+// Implement
 type AuthRegisterServiceImpl struct {
 	r repository.UserRepository
-}
-
-func NewAuthRegisterService(r repository.UserRepository) AuthRegisterService {
-	return &AuthRegisterServiceImpl{r: r}
 }
 
 func (s *AuthRegisterServiceImpl) Register(request *dto.UserRegisterRequest) (*dto.UserRegisterResponse, error) {

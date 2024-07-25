@@ -1,21 +1,34 @@
 package repository
 
 import (
+	"sync"
+
 	"gorm.io/gorm"
 
 	"github.com/papongun/go_todo/entity"
 )
 
+// Interface
 type UserRepository interface {
 	Save(username string, displayName string, password string) (*entity.User, error)
 }
 
-type UserRepositoryImpl struct {
-	db *gorm.DB
+// Instance
+var (
+	userRepoOnce     sync.Once
+	userRepoInstance UserRepository
+)
+
+func GetUserRepository(db *gorm.DB) *UserRepository {
+	userRepoOnce.Do(func() {
+		userRepoInstance = &UserRepositoryImpl{db: db}
+	})
+	return &userRepoInstance
 }
 
-func NewUserRepository(db *gorm.DB) UserRepository {
-	return &UserRepositoryImpl{db: db}
+// Implement
+type UserRepositoryImpl struct {
+	db *gorm.DB
 }
 
 func (r *UserRepositoryImpl) Save(username string, displayName string, password string) (*entity.User, error) {
