@@ -24,14 +24,14 @@ var (
 
 func GetAuthRegisterService(r repository.UserRepository) *AuthRegisterService {
 	authRegServiceOnce.Do(func() {
-		authRegServiceInstance = &AuthRegisterServiceImpl{r: r}
+		authRegServiceInstance = &AuthRegisterServiceImpl{R: r}
 	})
 	return &authRegServiceInstance
 }
 
 // Implement
 type AuthRegisterServiceImpl struct {
-	r repository.UserRepository
+	R repository.UserRepository
 }
 
 func (s *AuthRegisterServiceImpl) Register(request *dto.UserRegisterRequest) (*dto.UserRegisterResponse, error) {
@@ -46,7 +46,7 @@ func (s *AuthRegisterServiceImpl) Register(request *dto.UserRegisterRequest) (*d
 	if err != nil {
 		return nil, err
 	}
-	user, err := s.r.Save(request.Username, request.DisplayName, string(hashedPassword))
+	user, err := s.R.Save(request.Username, request.DisplayName, string(hashedPassword))
 
 	if err != nil {
 		return nil, exception.ValidationError{Message: err.Error()}

@@ -19,14 +19,14 @@ var (
 
 func GetUserRegisterContoller(s service.AuthRegisterService) *UserRegisterContoller {
 	userRegControllerOnce.Do(func() {
-		userRegControllerInstance = UserRegisterContoller{s: s}
+		userRegControllerInstance = UserRegisterContoller{S: s}
 	})
 	return &userRegControllerInstance
 }
 
 // Implement
 type UserRegisterContoller struct {
-	s service.AuthRegisterService
+	S service.AuthRegisterService
 }
 
 func (c *UserRegisterContoller) Register(ctx *fiber.Ctx) error {
@@ -35,7 +35,7 @@ func (c *UserRegisterContoller) Register(ctx *fiber.Ctx) error {
 		return exception.HandleError(ctx, err)
 	}
 
-	response, err := c.s.Register(&registerRequest)
+	response, err := c.S.Register(&registerRequest)
 	if err != nil {
 		return exception.HandleError(ctx, err)
 	}

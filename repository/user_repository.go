@@ -21,14 +21,14 @@ var (
 
 func GetUserRepository(db *gorm.DB) *UserRepository {
 	userRepoOnce.Do(func() {
-		userRepoInstance = &UserRepositoryImpl{db: db}
+		userRepoInstance = &UserRepositoryImpl{Db: db}
 	})
 	return &userRepoInstance
 }
 
 // Implement
 type UserRepositoryImpl struct {
-	db *gorm.DB
+	Db *gorm.DB
 }
 
 func (r *UserRepositoryImpl) Save(username string, displayName string, password string) (*entity.User, error) {
@@ -38,7 +38,7 @@ func (r *UserRepositoryImpl) Save(username string, displayName string, password 
 		Password:    password,
 	}
 
-	tx := r.db.Create(&user)
+	tx := r.Db.Create(&user)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
