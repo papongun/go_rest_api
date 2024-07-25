@@ -14,7 +14,7 @@ import (
 func TestCreateUserShouldSuccess(t *testing.T) {
 	sql, db, mock := db_mock.DbMock(t)
 	defer sql.Close()
-	repo := *repository.GetUserRepository(db)
+	repo := repository.UserRepositoryImpl{Db: db}
 
 	addRow := sqlmock.NewRows([]string{"id"}).AddRow("1")
 	expectedSQL := "INSERT INTO \"users\" (.+) VALUES (.+)"
@@ -33,7 +33,7 @@ func TestCreateUserShouldSuccess(t *testing.T) {
 func TestAddUserDuplicateUsername(t *testing.T) {
 	sql, db, mock := db_mock.DbMock(t)
 	defer sql.Close()
-	repo := *repository.GetUserRepository(db)
+	repo := repository.UserRepositoryImpl{Db: db}
 
 	expectedSQL := "INSERT INTO \"users\" (.+) VALUES (.+)"
 	mock.ExpectBegin()
