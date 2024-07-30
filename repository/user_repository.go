@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
+	"github.com/papongun/go_todo/config"
 	"github.com/papongun/go_todo/entity"
 )
 
@@ -19,9 +20,9 @@ var (
 	userRepoInstance UserRepository
 )
 
-func GetUserRepository(db *gorm.DB) UserRepository {
+func GetUserRepository() UserRepository {
 	userRepoOnce.Do(func() {
-		userRepoInstance = &UserRepositoryImpl{Db: db}
+		userRepoInstance = &UserRepositoryImpl{Db: config.GetDatabase()}
 	})
 	return userRepoInstance
 }

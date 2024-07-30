@@ -17,9 +17,9 @@ var (
 	userRegControllerInstance UserRegisterContoller
 )
 
-func GetUserRegisterContoller(s service.AuthRegisterService) *UserRegisterContoller {
+func GetUserRegisterContoller() *UserRegisterContoller {
 	userRegControllerOnce.Do(func() {
-		userRegControllerInstance = UserRegisterContoller{S: s}
+		userRegControllerInstance = UserRegisterContoller{S: service.GetAuthRegisterService()}
 	})
 	return &userRegControllerInstance
 }

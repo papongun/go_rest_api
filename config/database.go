@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -11,7 +12,19 @@ import (
 	"github.com/papongun/go_todo/entity"
 )
 
-func InitDatabase() (db *gorm.DB) {
+var (
+	dbInstance *gorm.DB
+	dbOnce     sync.Once
+)
+
+func GetDatabase() *gorm.DB {
+	dbOnce.Do(func() {
+		dbInstance = initDatabase()
+	})
+	return dbInstance
+}
+
+func initDatabase() (db *gorm.DB) {
 	erro := godotenv.Load("./config/.env")
 	if erro != nil {
 		panic("failed to retrive env")
