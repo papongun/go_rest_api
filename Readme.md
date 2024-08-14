@@ -1,5 +1,8 @@
 # Go (Fiber + Gorm + Postgres)
 
+This project is for POC Golang for backend development
+Currently has only user registeration service
+
 ### Setup
 
 1. Duplicate config/example.env to config.env
