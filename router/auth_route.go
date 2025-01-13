@@ -9,5 +9,5 @@ import (
 func InitAuthRoute(router fiber.Router) {
 	authRegController := auth_c.GetUserRegisterContoller()
 	authRoute := router.Group("/auth")
-	authRoute.Post("/login", authRegController.Register)
+	authRoute.Post("/register", authRegController.Register)
 }
